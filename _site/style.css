@@ -1,0 +1,35 @@
+@import url("https://fonts.googleapis.com/css?family=Roboto");
+html {
+  font-family: 'Roboto', sans-serif; }
+
+h2 {
+  margin-top: 40px; }
+
+hr {
+  border: 0;
+  padding: 1px;
+  margin: 42px 0px;
+  background-color: #efecec; }
+
+pre {
+  background-color: #475296;
+  color: white;
+  padding: 8px;
+  border-left: 3px solid #7d99ff;
+  font-family: "Lucida Console", monospace; }
+
+blockquote {
+  background-color: #efecec;
+  margin: 0;
+  padding: 30px 30px 20px 30px;
+  border-left: 3px solid gray; }
+  blockquote h2 {
+    margin-top: 0; }
+  blockquote pre {
+    background-color: #3e3e3e; }
+
+p code {
+  background-color: #f7f3ee;
+  padding: 4px;
+  color: #F44336;
+  border-radius: 3px; }

@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" type="text/css" href="/style.css">
+  <title>GML 2 GDS</title>
+</head>
+<body>
+  <h1 id="game-maker-to-godot-dictionary">Game Maker to Godot dictionary</h1>
+<p>This document is for game maker devs like me that are moving their games or engine from GM:S to Godot. You can you your browser’s search functionality to find GML functions and their equivalent in GDScript.</p>
+
+<hr />
+
+<h1 id="drawing-functions">Drawing functions</h1>
+<p>On game maker you can only use the drawing functions inside the draw event of an instance. On Godot you have to call the drawing functions inside a <code class="highlighter-rouge">func _draw()</code> of a <a href="http://docs.godotengine.org/en/3.0/classes/class_canvasitem.html"><strong>CanvasItem</strong></a>.</p>
+
+<h2 id="drawing-a-rectangle">Drawing a rectangle</h2>
+<p>GML</p>
+<pre><code class="language-gml">draw_rectangle(x1, y1, x2, y2, outline);
+</code></pre>
+
+<p>GDScript</p>
+<pre><code class="language-gdscript">draw_rect(Rect2, Color, bool filled=true)
+</code></pre>
+
+<blockquote>
+  <h2 id="example">Example:</h2>
+  <p>To draw the same rectangle on both engines:</p>
+
+  <p>GML</p>
+  <pre><code class="language-gml">draw_set_color(c_red)
+draw_rectangle(100, 120, 132, 152, false);
+</code></pre>
+
+  <p>GDScript</p>
+  <pre><code class="language-gdscript">draw_rect(Rect2(Vector2(100, 120), Vector2(32, 32)), Color("#ff0000"), false)
+</code></pre>
+</blockquote>
+
+<hr />
+
+<h1 id="game-functions">Game functions</h1>
+<p>With this function you can end the game</p>
+
+<p>GML</p>
+<pre><code class="language-gml">game_end();
+</code></pre>
+
+<p>GDScript</p>
+<pre><code class="language-gdscript">get_tree().quit()
+</code></pre>
+<hr />
+<h2 id="sources">Sources</h2>
+<ul>
+  <li><a href="https://docs.yoyogames.com/">Game Maker docs</a></li>
+  <li><a href="http://docs.godotengine.org/en/latest/index.html">Godot documentation</a></li>
+</ul>
+
+<h2 id="made-possible-by">Made possible by</h2>
+<p>A lot of poor souls that helped me answering questions on Discord, Reddit and Twitter.</p>
+
+<p><a href="https://github.com/coppolaemilio">Emilio Coppola</a></p>
+
+</body>
+</html>
