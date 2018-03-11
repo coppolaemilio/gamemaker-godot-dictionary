@@ -29,7 +29,7 @@ draw_rect(Rect2, Color, bool filled=true)
 >
 > GDScript
 > ```gdscript
-> draw_rect(Rect2(Vector2(100, 120), Vector2(32, 32)), Color("#ff0000"), false)
+> draw_rect(Rect2(Vector2(100, 120), Vector2(32, 32)), Color("#ff0000"), true)
 > ```
 
 ---
