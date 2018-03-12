@@ -41,7 +41,7 @@ draw_rect(Rect2, Color, bool filled=true)
 >
 > GML
 > ```gml
-> draw_set_color(c_red)
+> draw_set_color(c_red);
 > draw_rectangle(100, 120, 132, 152, false);
 > ```
 >
