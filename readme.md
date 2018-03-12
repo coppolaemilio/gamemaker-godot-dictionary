@@ -22,7 +22,7 @@ Color(0.2, 1.0, .7)
 # You can also set the color alpha by adding an aditional value
 Color(0.2, 1.0, .7, 0.5)
 ```
-You can also create a color from standardised color names with `ColorN`. See the full list (here)[http://docs.godotengine.org/en/stable/classes/class_@gdscript.html#class-gdscript-colorn]
+You can also create a color from standardised color names with `ColorN`. See the full list [here](http://docs.godotengine.org/en/stable/classes/class_@gdscript.html#class-gdscript-colorn)
 
 
 ## Drawing a rectangle
