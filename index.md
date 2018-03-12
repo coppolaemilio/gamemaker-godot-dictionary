@@ -10,6 +10,21 @@ This document is for game maker devs like me that are moving their games or engi
 # Drawing functions
 On game maker you can only use the drawing functions inside the draw event of an instance. On Godot you have to call the drawing functions inside a `func _draw()` of a [**CanvasItem**](http://docs.godotengine.org/en/3.0/classes/class_canvasitem.html).
 
+## Making colors
+GML
+```gml
+// These values are taken as being between 0 and 255
+make_colour_rgb(red, green, blue);
+```
+And you also have the colors like `c_white`, `c_blue`, etc..
+
+GDScript
+```gdscript
+# Constructs a color from an RGB profile using values between 0 and 1 (float)
+Color(0.2, 1.0, .7)
+```
+You can also create a color from standardised color names with `ColorN`. See the full list (here)[http://docs.godotengine.org/en/stable/classes/class_@gdscript.html#class-gdscript-colorn]
+
 ## Drawing a rectangle
 GML
 ```gml

@@ -4,7 +4,7 @@
   <meta charset="utf-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <link rel="stylesheet" type="text/css" href="/style.css">
+  <link rel="stylesheet" type="text/css" href="./style.css">
   <title>GML 2 GDS</title>
 </head>
 <body>
@@ -15,6 +15,19 @@
 
 <h1 id="drawing-functions">Drawing functions</h1>
 <p>On game maker you can only use the drawing functions inside the draw event of an instance. On Godot you have to call the drawing functions inside a <code class="highlighter-rouge">func _draw()</code> of a <a href="http://docs.godotengine.org/en/3.0/classes/class_canvasitem.html"><strong>CanvasItem</strong></a>.</p>
+
+<h2 id="making-colors">Making colors</h2>
+<p>GML</p>
+<pre><code class="language-gml">// These values are taken as being between 0 and 255
+make_colour_rgb(red, green, blue);
+</code></pre>
+<p>And you also have the colors like <code class="highlighter-rouge">c_white</code>, <code class="highlighter-rouge">c_blue</code>, etc..</p>
+
+<p>GDScript</p>
+<pre><code class="language-gdscript"># Constructs a color from an RGB profile using values between 0 and 1 (float)
+Color(0.2, 1.0, .7)
+</code></pre>
+<p>You can also create a color from standardised color names with <code class="highlighter-rouge">ColorN</code>. See the full list (here)[http://docs.godotengine.org/en/stable/classes/class_@gdscript.html#class-gdscript-colorn]</p>
 
 <h2 id="drawing-a-rectangle">Drawing a rectangle</h2>
 <p>GML</p>
@@ -35,7 +48,7 @@ draw_rectangle(100, 120, 132, 152, false);
 </code></pre>
 
   <p>GDScript</p>
-  <pre><code class="language-gdscript">draw_rect(Rect2(Vector2(100, 120), Vector2(32, 32)), Color("#ff0000"), false)
+  <pre><code class="language-gdscript">draw_rect(Rect2(Vector2(100, 120), Vector2(32, 32)), ColorN("red"), true)
 </code></pre>
 </blockquote>
 
