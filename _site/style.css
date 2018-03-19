@@ -2,8 +2,21 @@
 html {
   font-family: 'Roboto', sans-serif; }
 
+body {
+  max-width: 90%;
+  margin: 0 auto;
+  font-size: 19px;
+  line-height: 1.5;
+  color: #24292e; }
+
+@media (min-width: 768px) {
+  body {
+    max-width: 70%; } }
 h2 {
   margin-top: 40px; }
+
+p img {
+  width: 100%; }
 
 hr {
   border: 0;
@@ -12,11 +25,12 @@ hr {
   background-color: #efecec; }
 
 pre {
-  background-color: #475296;
-  color: white;
+  background-color: #f6f8fa;
+  color: #24292e;
   padding: 8px;
   border-left: 3px solid #7d99ff;
-  font-family: "Lucida Console", monospace; }
+  font-family: "Lucida Console", monospace;
+  overflow: auto; }
 
 blockquote {
   background-color: #efecec;
@@ -25,11 +39,13 @@ blockquote {
   border-left: 3px solid gray; }
   blockquote h2 {
     margin-top: 0; }
-  blockquote pre {
-    background-color: #3e3e3e; }
 
 p code {
   background-color: #f7f3ee;
   padding: 4px;
   color: #F44336;
   border-radius: 3px; }
+
+a {
+  color: #0366d6;
+  text-decoration: none; }
