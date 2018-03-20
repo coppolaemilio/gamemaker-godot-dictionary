@@ -164,8 +164,8 @@ draw_string(font,Vector2(x,y),string,color,separation)
 >
 > GML
 > ```gml
-> draw_set_font(fn_bitter)
-> draw_set_font(make_color_rgb(0,0,0))
+> draw_set_font(fn_bitter);
+> draw_set_font(make_color_rgb(0,0,0));
 > draw_text(140, 100, "Hello world");
 > ```
 > 
@@ -197,7 +197,7 @@ self.hide()
 
 GML
 ```gml
-instance_destroy()
+instance_destroy();
 ```
 
 GDScript
