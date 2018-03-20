@@ -12,8 +12,9 @@ This document is for game maker devs like me that are moving their games or engi
 4. [Drawing functions](#drawing-functions)
 5. [Instance functions](#instance-functions)
 6. [Strings](#strings)
-7. [Game functions](#game-functions)
-8. [Window functions](#window-functions)
+7. [Random functions](#random-functions)
+8. [Game functions](#game-functions)
+9. [Window functions](#window-functions)
 
 ---
 
