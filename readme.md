@@ -41,8 +41,9 @@ GDScript **_ready()**
 ```gdscript
 extends Node
 
+var player_speed = 10
+
 func _ready():
-    var player_speed = 10
     var monsters = get_tree().get_nodes_in_group("MONSTERS").size();
     if monsters:
         player_speed = 5
