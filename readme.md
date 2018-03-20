@@ -12,6 +12,7 @@ This document is for game maker devs like me that are moving their games or engi
 4. [Instance functions](#instance-functions)
 5. [Strings](#strings)
 6. [Game functions](#game-functions)
+7. [Window functions](#window-functions)
 
 ---
 
@@ -131,7 +132,7 @@ GDScript
 draw_rect(Rect2, Color, bool filled=true)
 ```
 
-> ## Example:
+> ### Example:
 > To draw the same rectangle on both engines:
 >
 > GML
@@ -145,6 +146,35 @@ draw_rect(Rect2, Color, bool filled=true)
 > draw_rect(Rect2(Vector2(100, 120), Vector2(32, 32)), ColorN("red"), true)
 > ```
 
+## Drawing text
+Drawing text is a bit more tricky in Godot. Make sure you declare the font resource outside of the `_draw()` function.
+
+GML
+```gml
+draw_text(x, y, string);
+```
+
+GDScript
+```gdscript
+draw_string(font,Vector2(x,y),string,color,separation)
+```
+
+> ### Example:
+> To draw the same rectangle on both engines:
+>
+> GML
+> ```gml
+> draw_set_font(fn_bitter)
+> draw_set_font(make_color_rgb(0,0,0))
+> draw_text(140, 100, "Hello world");
+> ```
+> 
+> GDScript
+> ```gdscript
+> var font = load('res://fonts/Bitter.tres')
+> func _draw():
+> 	draw_string(Bitter,Vector2(140,100),"Hello world", Color(0,0,0,1),-1)
+> ```
 
 ## Visibility
 GML
@@ -238,7 +268,9 @@ string.erase(index, count)
 ---
 
 # Game functions
-With this function you can end the game
+
+## Game end
+With this function you can quit the game.
 
 GML
 ```gml
@@ -248,6 +280,21 @@ game_end();
 GDScript
 ```gdscript
 get_tree().quit()
+```
+
+---
+
+# Window functions
+
+## Set caption
+GML
+```gml
+window_set_caption(string);
+```
+
+GDScript
+```gdscript
+OS.set_window_title(string)
 ```
 
 ---

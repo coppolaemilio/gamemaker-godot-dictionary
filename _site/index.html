@@ -23,6 +23,7 @@
   <li><a href="#instance-functions">Instance functions</a></li>
   <li><a href="#strings">Strings</a></li>
   <li><a href="#game-functions">Game functions</a></li>
+  <li><a href="#window-functions">Window functions</a></li>
 </ol>
 
 <hr />
@@ -139,7 +140,7 @@ Color(0.2, 1.0, .7, 0.5)
 </code></pre>
 
 <blockquote>
-  <h2 id="example">Example:</h2>
+  <h3 id="example">Example:</h3>
   <p>To draw the same rectangle on both engines:</p>
 
   <p>GML</p>
@@ -149,6 +150,34 @@ draw_rectangle(100, 120, 132, 152, false);
 
   <p>GDScript</p>
   <pre><code class="language-gdscript">draw_rect(Rect2(Vector2(100, 120), Vector2(32, 32)), ColorN("red"), true)
+</code></pre>
+</blockquote>
+
+<h2 id="drawing-text">Drawing text</h2>
+<p>Drawing text is a bit more tricky in Godot. Make sure you declare the font resource outside of the <code class="highlighter-rouge">_draw()</code> function.</p>
+
+<p>GML</p>
+<pre><code class="language-gml">draw_text(x, y, string);
+</code></pre>
+
+<p>GDScript</p>
+<pre><code class="language-gdscript">draw_string(font,Vector2(x,y),string,color,separation)
+</code></pre>
+
+<blockquote>
+  <h3 id="example-1">Example:</h3>
+  <p>To draw the same rectangle on both engines:</p>
+
+  <p>GML</p>
+  <pre><code class="language-gml">draw_set_font(fn_bitter)
+draw_set_font(make_color_rgb(0,0,0))
+draw_text(140, 100, "Hello world");
+</code></pre>
+
+  <p>GDScript</p>
+  <pre><code class="language-gdscript">var font = load('res://fonts/Bitter.tres')
+func _draw():
+	draw_string(Bitter,Vector2(140,100),"Hello world", Color(0,0,0,1),-1)
 </code></pre>
 </blockquote>
 
@@ -228,7 +257,9 @@ string.to_lower()
 <hr />
 
 <h1 id="game-functions">Game functions</h1>
-<p>With this function you can end the game</p>
+
+<h2 id="game-end">Game end</h2>
+<p>With this function you can quit the game.</p>
 
 <p>GML</p>
 <pre><code class="language-gml">game_end();
@@ -236,6 +267,19 @@ string.to_lower()
 
 <p>GDScript</p>
 <pre><code class="language-gdscript">get_tree().quit()
+</code></pre>
+
+<hr />
+
+<h1 id="window-functions">Window functions</h1>
+
+<h2 id="set-caption">Set caption</h2>
+<p>GML</p>
+<pre><code class="language-gml">window_set_caption(string);
+</code></pre>
+
+<p>GDScript</p>
+<pre><code class="language-gdscript">OS.set_window_title(string)
 </code></pre>
 
 <hr />
