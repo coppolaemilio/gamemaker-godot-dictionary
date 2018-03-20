@@ -79,6 +79,18 @@ func _draw():
     draw_rect(Rect2, Color, bool filled=true)
 ```
 
+## Destroy event
+
+There is not an equivalent event for the **Destroy Event** but it can easily be coded in GDScript. Instead of destroying that node with the usual `queue_free()` you create a function called `destroy()` and execute some code before self deleting.
+
+GDScript **destroy()**
+```gdscript
+func destroy():
+    # Here you write whatever you want to 
+    # run before removing the node
+    self.queue_free()
+```
+
 ---
 
 # Globals
