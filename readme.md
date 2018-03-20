@@ -7,12 +7,13 @@ This document is for game maker devs like me that are moving their games or engi
 # Index
 
 1. [Events](#events)
-2. [Globals](#globals)
-3. [Drawing functions](#drawing-functions)
-4. [Instance functions](#instance-functions)
-5. [Strings](#strings)
-6. [Game functions](#game-functions)
-7. [Window functions](#window-functions)
+2. [Scripts](#scripts)
+3. [Globals](#globals)
+4. [Drawing functions](#drawing-functions)
+5. [Instance functions](#instance-functions)
+6. [Strings](#strings)
+7. [Game functions](#game-functions)
+8. [Window functions](#window-functions)
 
 ---
 
@@ -89,6 +90,32 @@ func destroy():
     # Here you write whatever you want to 
     # run before removing the node
     self.queue_free()
+```
+
+---
+
+# Scripts
+
+In game maker you can create scripts that you can call from any object in your project. In Godot, the so called "scripts" are called functions and you can declare all the custom `functions` that you want inside any node.
+
+To compare between the two you can see this simple "script" that will add two numbers:
+
+GML: Create new script called add_numbers
+```gml
+return argument0 + argument1;
+```
+
+GDScript: Create a function when needed
+```gdscript
+func add_numbers(argument0, argument1):
+    return argument0 + argument1
+```
+
+In Godot instead of using the names `argumentX` you should use a more descriptive name, that will create a variable that you can use from inside your function.
+
+```gdscript
+func add_numbers(number_one, number_two):
+    return number_one + number_two
 ```
 
 ---
