@@ -105,13 +105,13 @@ GML: Create new script called add_numbers
 return argument0 + argument1;
 ```
 
-GDScript: Create a function when needed
+GDScript: Inside a node's code
 ```gdscript
 func add_numbers(argument0, argument1):
     return argument0 + argument1
 ```
 
-In Godot instead of using the names `argumentX` you should use a more descriptive name, that will create a variable that you can use from inside your function.
+In Godot instead of using the names `argumentX` it is recommended that you use a more descriptive name. Every argument named when you declare the function will create a variable that you can use from inside of it.
 
 ```gdscript
 func add_numbers(number_one, number_two):
@@ -303,7 +303,24 @@ string.erase(index, count)
 ```
 
 
+---
 
+# Random functions
+
+## Choose
+
+GML
+```gml
+var value = choose(1, 2, 3);
+```
+
+In order to achieve something similar in Godot you have to first create an array with all the options and then get a random value from that array.
+
+GDScript
+```gdscript
+var options = [1, 2, 3]
+var value = options[randi() % options.size()])
+```
 
 ---
 
