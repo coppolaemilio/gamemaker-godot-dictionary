@@ -15,6 +15,7 @@ This document is for game maker devs like me that are moving their games or engi
 7. [Random functions](#random-functions)
 8. [Game functions](#game-functions)
 9. [Window functions](#window-functions)
+10. [Other functions](#other-functions)
 
 ---
 
@@ -354,6 +355,21 @@ GDScript
 ```gdscript
 OS.set_window_title(string)
 ```
+# Other functions
+
+## Open website on browser
+This will open the specified URL on the browser.
+
+GML
+```gml
+url_open( 'http://yoyogames.com' );
+```
+
+GDScript
+```gdscript
+OS.shell_open('http://godotengine.org/')
+```
+
 
 ---
 
