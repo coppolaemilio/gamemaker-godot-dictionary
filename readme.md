@@ -14,8 +14,9 @@ This document is for game maker devs like me that are moving their games or engi
 6. [Strings](#strings)
 7. [Random functions](#random-functions)
 8. [Game functions](#game-functions)
-9. [Window functions](#window-functions)
-10. [Other functions](#other-functions)
+9. [Room functions](#room-functions)
+10. [Window functions](#window-functions)
+11. [Other functions](#other-functions)
 
 ---
 
@@ -342,6 +343,20 @@ get_tree().quit()
 ```
 
 ---
+# Room functions
+
+## Change room
+GML
+```gml
+room_goto(room_name)
+```
+
+GDScript
+```gdscript
+get_tree().change_scene("res://nameofthescene.tscn")
+```
+
+---
 
 # Window functions
 
@@ -355,6 +370,9 @@ GDScript
 ```gdscript
 OS.set_window_title(string)
 ```
+
+---
+
 # Other functions
 
 ## Open website on browser
