@@ -13,10 +13,11 @@ This document is for game maker devs like me that are moving their games or engi
 5. [Instance functions](#instance-functions)
 6. [Strings](#strings)
 7. [Random functions](#random-functions)
-8. [Game functions](#game-functions)
-9. [Room functions](#room-functions)
-10. [Window functions](#window-functions)
-11. [Other functions](#other-functions)
+8. [Math functions](#math-functions)
+9. [Game functions](#game-functions)
+10. [Room functions](#room-functions)
+11. [Window functions](#window-functions)
+12. [Other functions](#other-functions)
 
 ---
 
@@ -327,6 +328,50 @@ var value = options[randi() % options.size()])
 
 ---
 
+
+# Math Functions
+
+## Arc Sine
+These functions take in a single float and return the arc sin
+
+GML
+```gml
+arcsin();
+```
+
+GDScript
+```gdscript
+asin()
+```
+
+## Arc Cosine
+These functions take in a single float and return the arc cos
+
+GML
+```gml
+arccos();
+```
+
+GDScript
+```gdscript
+acos()
+```
+
+## Arc Tangent
+These functions take in a single float and return the arc tan
+
+GML
+```gml
+arctan();
+```
+
+GDScript
+```gdscript
+atan()
+```
+
+---
+
 # Game functions
 
 ## Game end
@@ -399,3 +444,4 @@ OS.shell_open('http://godotengine.org/')
 ## < Written by [Emilio Coppola](https://github.com/coppolaemilio) > 
 
 Special thanks to a lot of poor souls that helped me answering questions on Discord, Reddit and Twitter.
+
