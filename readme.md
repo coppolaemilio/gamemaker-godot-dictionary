@@ -433,6 +433,17 @@ GDScript
 OS.shell_open('http://godotengine.org/')
 ```
 
+## Distance to object
+This is a similar way of calculating the distance from an instance to another. On gdscript all the variables have to be Vector2. Also, be mindful that not all nodes have the `position` variable.
+
+```gml
+distance_to_object(obj_Player)
+```
+
+```gdscript
+position.distance_to(Player.position)
+```
+
 
 ---
 
