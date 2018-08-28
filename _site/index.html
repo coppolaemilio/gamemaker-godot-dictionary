@@ -10,29 +10,84 @@
 <body>
   
 <h1 id="game-maker-to-godot-dictionary">Game Maker to Godot dictionary</h1>
-<p>This document is for game maker devs like me that are moving their games or engine from GM:S to Godot. You can you your browser’s search functionality to find GML functions and their equivalent in GDScript.</p>
+<p>This document is for game maker devs like me that are moving their games or engine from GM:S to Godot. The first section gives a brief overview of the framework differences. The rest gives an API comparison for specific GML functions and their GDScript equivalent. You can use your browser’s search functionality to find particular GML functions.</p>
 
 <hr />
 
 <h1 id="index">Index</h1>
 
 <ol>
+  <li><a href="#framework">Framework</a>
+    <ol>
+      <li><a href="#objects">Objects</a></li>
+      <li><a href="#scenes">Scenes</a></li>
+      <li><a href="#inheritance">Inheritance</a></li>
+    </ol>
+  </li>
   <li><a href="#events">Events</a></li>
+  <li><a href="#scripts">Scripts</a></li>
   <li><a href="#globals">Globals</a></li>
   <li><a href="#drawing-functions">Drawing functions</a></li>
   <li><a href="#instance-functions">Instance functions</a></li>
   <li><a href="#strings">Strings</a></li>
+  <li><a href="#random-functions">Random functions</a></li>
+  <li><a href="#math-functions">Math functions</a></li>
   <li><a href="#game-functions">Game functions</a></li>
+  <li><a href="#room-functions">Room functions</a></li>
   <li><a href="#window-functions">Window functions</a></li>
+  <li><a href="#other-functions">Other functions</a></li>
 </ol>
 
 <hr />
+<h1 id="framework">Framework</h1>
 
+<p>Below is a list of basic framework differences between the two engines. Understanding these will help you more quickly adapt to Godot’s workflow.</p>
+
+<h2 id="objects">Objects</h2>
+
+<p>In Game Maker, you create a <code class="highlighter-rouge">room</code> filled with a list of <code class="highlighter-rouge">objects</code> that each may hold a <code class="highlighter-rouge">sprite</code> and a series of <code class="highlighter-rouge">events</code> which in turn trigger a series of <code class="highlighter-rouge">actions</code>.
+Your scripted behavior exists in the <code class="highlighter-rouge">actions</code> portion. To reproduce this behavior multiple times between objects, you create a <code class="highlighter-rouge">script</code> that can be executed as a single <code class="highlighter-rouge">action</code>.</p>
+
+<p>In Godot, you create a <code class="highlighter-rouge">scene</code> filled with a hierarchy of special <code class="highlighter-rouge">Objects</code> called <code class="highlighter-rouge">Nodes</code>. Rather than having you specify logic attached to a generic object though, Godot provides
+a variety of customized objects for you. When you create a <code class="highlighter-rouge">Script</code>, you are in fact <em>extending</em> an existing <code class="highlighter-rouge">Object</code> type with custom features.</p>
+
+<p>Objects in Godot can have any combination of…</p>
+
+<ul>
+  <li>properties (like defining a variable during the Create Event)</li>
+  <li>constants (same, but they cannot be changed)</li>
+  <li>methods (like an action or series of actions)
+    <ul>
+      <li>Note that some methods are “notifications”, triggered by the engine automatically. These are often preceded with an underscore ‘_’.</li>
+    </ul>
+  </li>
+  <li>signals (like custom events that other objects can react to)</li>
+</ul>
+
+<p>Many of the code comparisons you see will illustrate a method, a.k.a. function, in place of an event’s logic. Rather than having several scripts that each supply the logic for a single event’s action(s), Godot has you define a single script per object with multiple functions defined for each “event” (perhaps even one for multiple).</p>
+
+<h2 id="scenes">Scenes</h2>
+
+<p>Game Maker’s rooms provide a flat list of the different types of assets that exist in the room. In order to have multiple sprites or physical objects come together to form the same object, you have to manually position them all during a step event by globally accessing them from within the room.</p>
+
+<p>Godot’s scenes are more small scale and self-contained. Your scenes can effectively be an object unto themselves as you add all of the necessary Sprites, PhysicsBody2Ds, and other Nodes to your scene’s hierarchy to build up your object. That scene can then be <code class="highlighter-rouge">instanced</code> within a larger scene, similar to creating an object in a room. What’s more, the nodes lower in the hierarchy will automatically move relative to their parent, so there is no need to manually position them.</p>
+
+<h2 id="inheritance">Inheritance</h2>
+
+<p>In Game Maker, there is a concept of having a “parent” object. Child objects then inherit properties and functions from the parent. However, in Godot there are two distinct concepts: Inheritance and Ownership.</p>
+
+<p>When you construct a scene, you are creating a hierarchy of nodes with parent-child relationships. The node at the top, i.e. the “root of the scene”, provides a single point of contact between this scene and others. However, the child nodes do not inherit its functionality. The parent merely “owns” each child node and may pass on information to it that it can use.</p>
+
+<p>This is why a child Node2D will move relative to its parent. The parent tells the child where the parent exists, and the Node2D object will take that into account when positioning itself.</p>
+
+<p>To implement inheritance, you create a script and place it on a “base” object. You may then define custom features for this new type. These scripts will know the properties, constants, methods, and signals of the base object they are extending.</p>
+
+<hr />
 <h1 id="events">Events</h1>
-<p>On Game Maker when you need to code logic inside an object you use Events. There are many kinds of events but the most used ones are: <code class="highlighter-rouge">create</code>, <code class="highlighter-rouge">step</code>, <code class="highlighter-rouge">draw</code>.</p>
+<p>In Game Maker, when you need to code logic inside an object, you use Events. There are many kinds of events but the most used ones are: <code class="highlighter-rouge">create</code>, <code class="highlighter-rouge">step</code>, <code class="highlighter-rouge">draw</code>.</p>
 
 <h2 id="create-event">Create Event</h2>
-<p>When you need to declare variables for an object in GMS you do it inside the <strong>Create Event</strong>. The equivalent in Godot is a function called <code class="highlighter-rouge">_ready()</code>. The main difference here is that on GMS, the <strong>Create Event</strong> declares variables that are accesible from everywhere. In Godot if you want your variables to be exposed to other functions or Nodes (objects) you need to declare them outside of the <code class="highlighter-rouge">_ready()</code> function at the top of the document.</p>
+<p>When you need to declare variables for an object in GMS you do it inside the <strong>Create Event</strong>. The equivalent in Godot is a function called <code class="highlighter-rouge">_ready()</code>. The main difference here is that on GMS, the <strong>Create Event</strong> declares variables that are accessible from everywhere. In Godot if you want your variables to be exposed to other functions or Nodes (objects) you need to declare them outside of the <code class="highlighter-rouge">_ready()</code> function at the top of the document.</p>
 
 <p>Imagine that we want to set the variable <code class="highlighter-rouge">player_speed</code> to <code class="highlighter-rouge">10</code> but if there are monsters present, you want it to be <code class="highlighter-rouge">5</code>.
 In Game Maker you can code all this inside the <strong>Create Event</strong>:</p>
@@ -51,8 +106,9 @@ if (monsters) {
 <p>GDScript <strong>_ready()</strong></p>
 <pre><code class="language-gdscript">extends Node
 
+var player_speed = 10
+
 func _ready():
-    var player_speed = 10
     var monsters = get_tree().get_nodes_in_group("MONSTERS").size();
     if monsters:
         player_speed = 5
@@ -82,6 +138,49 @@ func _ready():
 <p>GDScript <strong>_draw()</strong></p>
 <pre><code class="language-gdscript">func _draw():
     draw_rect(Rect2, Color, bool filled=true)
+</code></pre>
+
+<h2 id="destroy-event">Destroy event</h2>
+
+<p>Godot does not provide an equivalent notification function for the <strong>Destroy Event</strong> but it can be accessed through the actual notification callback.</p>
+
+<p>GDScript <strong>_notification(what)</strong></p>
+<pre><code class="language-gdscript">func _notification(what):
+    match p_what:
+        NOTIFICATION_PREDELETE:
+            # execute logic before deleting the object.
+</code></pre>
+
+<p>Another option is to easily code up your own in GDScript. Instead of destroying that node with the usual <code class="highlighter-rouge">queue_free()</code> you create a function called <code class="highlighter-rouge">destroy()</code> and execute some code before self deleting.</p>
+
+<p>GDScript <strong>destroy()</strong></p>
+<pre><code class="language-gdscript">func destroy():
+    # Here you write whatever you want to 
+    # run before removing the node
+    self.queue_free()
+</code></pre>
+
+<hr />
+
+<h1 id="scripts">Scripts</h1>
+
+<p>In game maker you can create scripts that you can call from any object in your project. In Godot, the so called “scripts” are called functions and you can declare all the custom <code class="highlighter-rouge">functions</code> that you want inside any node.</p>
+
+<p>To compare between the two you can see this simple “script” that will add two numbers:</p>
+
+<p>GML: Create new script called add_numbers</p>
+<pre><code class="language-gml">return argument0 + argument1;
+</code></pre>
+
+<p>GDScript: Inside a node’s code</p>
+<pre><code class="language-gdscript">func add_numbers(argument0, argument1):
+    return argument0 + argument1
+</code></pre>
+
+<p>In Godot instead of using the names <code class="highlighter-rouge">argumentX</code> it is recommended that you use a more descriptive name. Every argument named when you declare the function will create a variable that you can use from inside of it.</p>
+
+<pre><code class="language-gdscript">func add_numbers(number_one, number_two):
+    return number_one + number_two
 </code></pre>
 
 <hr />
@@ -169,8 +268,8 @@ draw_rectangle(100, 120, 132, 152, false);
   <p>To draw the same rectangle on both engines:</p>
 
   <p>GML</p>
-  <pre><code class="language-gml">draw_set_font(fn_bitter)
-draw_set_font(make_color_rgb(0,0,0))
+  <pre><code class="language-gml">draw_set_font(fn_bitter);
+draw_set_font(make_color_rgb(0,0,0));
 draw_text(140, 100, "Hello world");
 </code></pre>
 
@@ -199,7 +298,7 @@ self.hide()
 <h2 id="instance-destroy">Instance destroy</h2>
 
 <p>GML</p>
-<pre><code class="language-gml">instance_destroy()
+<pre><code class="language-gml">instance_destroy();
 </code></pre>
 
 <p>GDScript</p>
@@ -256,6 +355,60 @@ string.to_lower()
 
 <hr />
 
+<h1 id="random-functions">Random functions</h1>
+
+<h2 id="choose">Choose</h2>
+
+<p>GML</p>
+<pre><code class="language-gml">var value = choose(1, 2, 3);
+</code></pre>
+
+<p>In order to achieve something similar in Godot you have to first create an array with all the options and then get a random value from that array.</p>
+
+<p>GDScript</p>
+<pre><code class="language-gdscript">var options = [1, 2, 3]
+var value = options[randi() % options.size()])
+</code></pre>
+
+<hr />
+
+<h1 id="math-functions">Math Functions</h1>
+
+<h2 id="arc-sine">Arc Sine</h2>
+<p>These functions take in a single float and return the arc sin</p>
+
+<p>GML</p>
+<pre><code class="language-gml">arcsin();
+</code></pre>
+
+<p>GDScript</p>
+<pre><code class="language-gdscript">asin()
+</code></pre>
+
+<h2 id="arc-cosine">Arc Cosine</h2>
+<p>These functions take in a single float and return the arc cos</p>
+
+<p>GML</p>
+<pre><code class="language-gml">arccos();
+</code></pre>
+
+<p>GDScript</p>
+<pre><code class="language-gdscript">acos()
+</code></pre>
+
+<h2 id="arc-tangent">Arc Tangent</h2>
+<p>These functions take in a single float and return the arc tan</p>
+
+<p>GML</p>
+<pre><code class="language-gml">arctan();
+</code></pre>
+
+<p>GDScript</p>
+<pre><code class="language-gdscript">atan()
+</code></pre>
+
+<hr />
+
 <h1 id="game-functions">Game functions</h1>
 
 <h2 id="game-end">Game end</h2>
@@ -267,6 +420,18 @@ string.to_lower()
 
 <p>GDScript</p>
 <pre><code class="language-gdscript">get_tree().quit()
+</code></pre>
+
+<hr />
+<h1 id="room-functions">Room functions</h1>
+
+<h2 id="change-room">Change room</h2>
+<p>GML</p>
+<pre><code class="language-gml">room_goto(room_name)
+</code></pre>
+
+<p>GDScript</p>
+<pre><code class="language-gdscript">get_tree().change_scene("res://nameofthescene.tscn")
 </code></pre>
 
 <hr />
@@ -284,6 +449,30 @@ string.to_lower()
 
 <hr />
 
+<h1 id="other-functions">Other functions</h1>
+
+<h2 id="open-website-on-browser">Open website on browser</h2>
+<p>This will open the specified URL on the browser.</p>
+
+<p>GML</p>
+<pre><code class="language-gml">url_open( 'http://yoyogames.com' );
+</code></pre>
+
+<p>GDScript</p>
+<pre><code class="language-gdscript">OS.shell_open('http://godotengine.org/')
+</code></pre>
+
+<h2 id="distance-to-object">Distance to object</h2>
+<p>This is a similar way of calculating the distance from an instance to another. On gdscript all the variables have to be Vector2. Also, be mindful that not all nodes have the <code class="highlighter-rouge">position</code> variable.</p>
+
+<pre><code class="language-gml">distance_to_object(obj_Player)
+</code></pre>
+
+<pre><code class="language-gdscript">position.distance_to(Player.position)
+</code></pre>
+
+<hr />
+
 <h2 id="sources">Sources</h2>
 <ul>
   <li><a href="https://docs.yoyogames.com/">Game Maker docs</a></li>
@@ -293,6 +482,7 @@ string.to_lower()
 <h2 id="-written-by-emilio-coppola-">&lt; Written by <a href="https://github.com/coppolaemilio">Emilio Coppola</a> &gt;</h2>
 
 <p>Special thanks to a lot of poor souls that helped me answering questions on Discord, Reddit and Twitter.</p>
+
 
 </body>
 </html>
