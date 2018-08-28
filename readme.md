@@ -1,31 +1,73 @@
 
 # Game Maker to Godot dictionary
-This document is for game maker devs like me that are moving their games or engine from GM:S to Godot. You can you your browser's search functionality to find GML functions and their equivalent in GDScript.
+This document is for game maker devs like me that are moving their games or engine from GM:S to Godot. The first section gives a brief overview of the framework differences. The rest gives an API comparison for specific GML functions and their GDScript equivalent. You can use your browser's search functionality to find particular GML functions.
 
 ---
 
 # Index
 
-1. [Events](#events)
-2. [Scripts](#scripts)
-3. [Globals](#globals)
-4. [Drawing functions](#drawing-functions)
-5. [Instance functions](#instance-functions)
-6. [Strings](#strings)
-7. [Random functions](#random-functions)
-8. [Math functions](#math-functions)
-9. [Game functions](#game-functions)
-10. [Room functions](#room-functions)
-11. [Window functions](#window-functions)
-12. [Other functions](#other-functions)
+1. [Framework](#framework)
+    1. [Objects](#objects)
+    2. [Scenes](#scenes)
+    3. [Inheritance](#inheritance)
+2. [Events](#events)
+3. [Scripts](#scripts)
+4. [Globals](#globals)
+5. [Drawing functions](#drawing-functions)
+6. [Instance functions](#instance-functions)
+7. [Strings](#strings)
+8. [Random functions](#random-functions)
+9. [Math functions](#math-functions)
+10. [Game functions](#game-functions)
+11. [Room functions](#room-functions)
+12. [Window functions](#window-functions)
+13. [Other functions](#other-functions)
 
 ---
+# Framework
 
+Below is a list of basic framework differences between the two engines. Understanding these will help you more quickly adapt to Godot's workflow.
+
+## Objects
+
+In Game Maker, you create a `room` filled with a list of `objects` that each may hold a `sprite` and a series of `events` which in turn trigger a series of `actions`.
+Your scripted behavior exists in the `actions` portion. To reproduce this behavior multiple times between objects, you create a `script` that can be executed as a single `action`.
+
+In Godot, you create a `scene` filled with a hierarchy of special `Objects` called `Nodes`. Rather than having you specify logic attached to a generic object though, Godot provides
+a variety of customized objects for you. When you create a `Script`, you are in fact *extending* an existing `Object` type with custom features.
+
+Objects in Godot can have any combination of...
+
+- properties (like defining a variable during the Create Event)
+- constants (same, but they cannot be changed)
+- methods (like an action or series of actions)
+    - Note that some methods are "notifications", triggered by the engine automatically. These are often preceded with an underscore '_'.
+- signals (like custom events that other objects can react to)
+
+Many of the code comparisons you see will illustrate a method, a.k.a. function, in place of an event's logic. Rather than having several scripts that each supply the logic for a single event's action(s), Godot has you define a single script per object with multiple functions defined for each "event" (perhaps even one for multiple).
+
+## Scenes
+
+Game Maker's rooms provide a flat list of the different types of assets that exist in the room. In order to have multiple sprites or physical objects come together to form the same object, you have to manually position them all during a step event by globally accessing them from within the room.
+
+Godot's scenes are more small scale and self-contained. Your scenes can effectively be an object unto themselves as you add all of the necessary Sprites, PhysicsBody2Ds, and other Nodes to your scene's hierarchy to build up your object. That scene can then be `instanced` within a larger scene, similar to creating an object in a room. What's more, the nodes lower in the hierarchy will automatically move relative to their parent, so there is no need to manually position them.
+
+## Inheritance
+
+In Game Maker, there is a concept of having a "parent" object. Child objects then inherit properties and functions from the parent. However, in Godot there are two distinct concepts: Inheritance and Ownership.
+
+When you construct a scene, you are creating a hierarchy of nodes with parent-child relationships. The node at the top, i.e. the "root of the scene", provides a single point of contact between this scene and others. However, the child nodes do not inherit its functionality. The parent merely "owns" each child node and may pass on information to it that it can use. 
+
+This is why a child Node2D will move relative to its parent. The parent tells the child where the parent exists, and the Node2D object will take that into account when positioning itself.
+
+To implement inheritance, you create a script and place it on a "base" object. You may then define custom features for this new type. These scripts will know the properties, constants, methods, and signals of the base object they are extending.
+
+---
 # Events
-On Game Maker when you need to code logic inside an object you use Events. There are many kinds of events but the most used ones are: `create`, `step`, `draw`.
+In Game Maker, when you need to code logic inside an object, you use Events. There are many kinds of events but the most used ones are: `create`, `step`, `draw`.
 
 ## Create Event
-When you need to declare variables for an object in GMS you do it inside the **Create Event**. The equivalent in Godot is a function called `_ready()`. The main difference here is that on GMS, the **Create Event** declares variables that are accesible from everywhere. In Godot if you want your variables to be exposed to other functions or Nodes (objects) you need to declare them outside of the `_ready()` function at the top of the document.
+When you need to declare variables for an object in GMS you do it inside the **Create Event**. The equivalent in Godot is a function called `_ready()`. The main difference here is that on GMS, the **Create Event** declares variables that are accessible from everywhere. In Godot if you want your variables to be exposed to other functions or Nodes (objects) you need to declare them outside of the `_ready()` function at the top of the document.
 
 Imagine that we want to set the variable `player_speed` to `10` but if there are monsters present, you want it to be `5`.
 In Game Maker you can code all this inside the **Create Event**:
@@ -86,7 +128,17 @@ func _draw():
 
 ## Destroy event
 
-There is not an equivalent event for the **Destroy Event** but it can easily be coded in GDScript. Instead of destroying that node with the usual `queue_free()` you create a function called `destroy()` and execute some code before self deleting.
+Godot does not provide an equivalent notification function for the **Destroy Event** but it can be accessed through the actual notification callback.
+
+GDScript **_notification(what)**
+```gdscript
+func _notification(what):
+    match p_what:
+        NOTIFICATION_PREDELETE:
+            # execute logic before deleting the object.
+```
+
+Another option is to easily code up your own in GDScript. Instead of destroying that node with the usual `queue_free()` you create a function called `destroy()` and execute some code before self deleting.
 
 GDScript **destroy()**
 ```gdscript
