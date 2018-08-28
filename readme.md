@@ -22,6 +22,7 @@ This document is for game maker devs like me that are moving their games or engi
 11. [Room functions](#room-functions)
 12. [Window functions](#window-functions)
 13. [Other functions](#other-functions)
+14. [Data Structures](#data-structures)
 
 ---
 # Framework
@@ -283,6 +284,10 @@ GDScript
 ```gdscript
 self.show()
 self.hide()
+self.visible = true;
+self.visible = false;
+self.set_visibility(true);
+self.set_visibility(false);
 ```
 
 ---
@@ -298,9 +303,11 @@ instance_destroy();
 
 GDScript
 ```gdscript
-self.queue_free()
+self.queue_free() # for Nodes, waits until next frame to delete all queued Nodes at once
+self.free() # for all Objects, deletes immediately
 ```
 
+Note that deleting a Node will also delete all of its attached children automatically.
 
 ---
 
@@ -317,7 +324,7 @@ string_length(string);
 
 GDScript
 ```gdscript
-string.length
+string.length()
 ```
 
 ## String Char At
@@ -496,6 +503,255 @@ distance_to_object(obj_Player)
 position.distance_to(Player.position)
 ```
 
+
+---
+
+# Data Structures
+
+## Stack, Queue, List, Serialization
+
+Godot's Array doubles as the stack and queue data structure. Unfortunately, Godot has no Lists for the scripting API (although the engine itself has them).
+
+GML **global Stack functions**
+```gml
+stack = ds_stack_create();
+
+// ...do various insertions
+
+if ds_stack_empty(stack) {
+    // is empty
+}
+else if ds_stack_size(stack) == 3 {
+    // there are 3 items on the stack
+    stack2 = ds_stack_create();
+    ds_stack_copy(stack2, stack);
+    top = ds_stack_top(stack2); /top is the item at index 2
+    ds_stack_pop(stack2); //top's value is no longer in stack2
+    ds_stack_push(stack2, 5); //top's previous index now has value 5
+    serialized_data = ds_stack_write(stack2); //converts stack2 into a data string
+    stack3 = ds_stack_read(serialized_data); //deserializes the data string into another stack object.
+}
+ds_stack_clear(stack);
+ds_stack_destroy(stack);
+```
+
+GDScript **Array type** as "stack"
+```gdscript
+var arr = []
+if arr.empty(): # if not arr: also works
+    pass
+else if arr.size(): # else if arr: also works
+    var arr2 = arr.duplicate()
+    var top = arr2.back()
+    arr2.pop_back()
+    arr2.push_back(5)
+    
+    # a stringified version of the array, but not actually serialized data
+    var arr_str = str(arr2)
+
+    # all serialized data is stored on Resource objects which automatically serializes all properties of any kind.
+    var res_script = GDScript.new()
+    res_script.source_code = "extends Resource\n"
+    res_script.source_code += "var array"
+    res_script.reload()
+    # ^ you could also just create an actual script and load it, e.g.
+    res_script = load("res://res_script.gd")
+
+    var res = res_script.new()
+    res.array = arr2
+    ResourceSaver.save("res://my_array.tres", res) # serializes all properties on res for you
+    var res2 = load("res://my_array.tres")
+
+arr.clear()
+# because Arrays are allocated with a reference counter, they automatically delete themselves when no references to them exist anymore.
+```
+
+In addition to `push_back()` and `pop_back()` to simulate a stack, Godot's arrays also have `push_front()` and `pop_front()`. The combination of `push_front()` and `pop_back()` gives you a queue's features.
+
+## Maps
+
+Godot's Dictionary object is the equivalent of GML's DS Map. They can be inlined into GDScript code just like Arrays by using curly brackets.
+
+Unlike DS Maps however, Arrays, Dictionaries, and other data (even custom Objects!) can be made into a key *or* value in a Dictionary (or a value in an Array). This is contrary to what the Yoyo Games docs have to say about DS Maps:
+
+> NOTE: While these functions permit you to add lists and maps within a map, they are useless for anything other than JSON, and nested maps and lists will not be read correctly if written to disk or accessed in any other way.
+
+GML **global Map functions**
+```gml
+map = ds_map_create();
+ds_map_add(map, "level", 100);
+ds_map_add(map, 5.2, "hello");
+map[? "super"] = "awesome";
+ds_map_add(map, "super", "goodbye"); // fails because key "super" already exists
+if ds_map_exists("super") {
+    // "super" is a key
+    ds_map_replace(map, "super", "goodbye"); //succeeds because this is a "replace" operation
+    ds_map_delete(map, "super"); // now key "super" is gone
+}
+
+if ds_map_empty(map) {
+    // it is empty
+}
+else if ds_map_size(map) == 2 {
+    // has 3 key-value pairs
+}
+
+// iteration
+var size, key, i;
+size = ds_map_size(inventory);
+key = ds_map_find_first(inventory);
+for (i = 0; i < size; i++;) {
+    if key != "level" {
+        key = ds_map_find_next(inventory, key)
+    }
+    else {
+        break;
+    }
+}
+
+map2 = ds_map_copy(map); // map2 is now a copy of map3
+
+serialized_data = ds_map_write(map); //converts map into a data string
+map3 = ds_map_read(serialized_data); //deserializes the data string into another map object.
+
+ds_map_clear(map); // it is now empty
+ds_map_destroy(map); // memory is freed
+```
+
+GDScript **Dictionary type**
+```gdscript
+var dict = {"hello": "world"} # initialization, just like an array, could be empty with '{}'
+dict["level"] = 100
+dict[self] = {
+    3.4: "PI",
+    [1, 2, 3]: GDScript.new(),
+}
+
+if dict.has(self):
+    dict[self] = "testing" # just deleted all of those objects because their references disappeared by overwriting the value
+    dict.erase(self) # the key-value pair is now gone.
+
+if dict.empty():
+    pass # it is empty
+if not dict:
+    pass # same
+if dict.size(): # if dict: also works
+    pass # the Dictionary is non-empty
+if dict.size() == 2:
+    pass # there are 2 key-value pairs that exist
+
+# iteration
+for a_key in dict:
+    print(dict[a_key])
+
+# Iterate over first 3 key-value pairs.
+# Safely exit early if it isn't that large
+var i = 0
+for a_key in dict:
+    var value = dict[a_key]
+    i += 1
+    if i == 3:
+        break
+
+# string keys can be directly accessed as if properties on an object
+var value = dict.level
+
+# copy the Dictionary
+var dict2 = dict.duplicate()
+
+# serialization is the same
+var res_script = load("res://res_script.gd")
+var res = res_script.new() # res_script.gd needs to define a property, in this case called 'foo'
+res.foo = dict2
+ResourceSaver.save("res://res.tres", res)
+var res2 = load("res://res.tres")
+# these print the same thing
+print(dict2)
+print(res2.foo)
+
+dict.clear()
+# going out of scope means that the local variables 'dict', 'dict2', 'res_script', 'res', etc. disappear and all references to them end.
+# Because they either an Array, a Dictionary, or a Reference object, they are freed automatically when all references to them vanish.
+```
+
+For JSON manipulation, you can also freely translate a combination of Arrays, Dictionaries, and other data from GDScript into a JSON string and back by using the JSON global.
+
+JSON **parse(string)**
+```gdscript
+var p = JSON.parse('{"hello": "world"}')
+if p and p.error == OK:
+    if typeof(p.result) == TYPE_DICTIONARY:
+        print(p.result["hello"]) # prints "world"
+    if typeof(p>result) == TYPE_ARRAY:
+        pass # could be possible, with a different JSON string
+else:
+    print("parse error")
+```
+
+## Priority Queue
+
+Godot does not provide its own Priority Queue object. Instead, to accomplish its functionality, you must either implement your own special Node class that handles its own sub-hierarchy of nodes, or you must use an Array in which you sort it after every mutable operation. Array comes with a built-in `sort` function for simple types and the option to specify your own sorting algorithm with a `sort_custom` method.
+
+Array **sort_custom(script, static_function_name)**
+```gdscript
+class MyCustomSorter:
+    static func sort(a, b):
+        if a[0] < b[0]:
+            return true
+        return false
+
+var my_items = [[5, "Potato"], [9, "Rice"], [4, "Tomato"]]
+my_items.sort_custom(MyCustomSorter, "sort")
+```
+The "min" and "max" are then always located at `front()` and `back()`, respectively.
+
+## Grid
+
+Godot does not provide its own grid class (the TileMap and GridMap nodes are purely for visualization purposes). To create a 2D array, you need to create an array of arrays:
+
+GDScript **Array of Arrays**
+```gdscript
+var arr = [
+    [0, 1, 2],
+    [3, 4, 5],
+    [6, 7, 8],
+]
+print(arr[1][2]) # prints 5
+```
+
+There are no special utilities methods to assist in 2D array operations. You will have to code those manually, perhaps with a script extending `Reference`.
+
+```gdscript
+# grid.gd
+extends Reference
+var data = []
+
+func _init(width = 0, height = 0):
+    resize(width, height)
+
+func get_width():
+    var max = 0
+    for arr in data:
+        if arr.size() > max:
+            max = arr.size()
+    return max
+
+func get_height():
+    return data.size()
+
+func resize(width, height):
+    data.resize(height)
+    for arr in data:
+        arr.resize(width)
+
+# ...etc.
+# node.gd
+extends Node
+const Grid = preload("res://grid.gd")
+func _ready():
+    var grid = Grid.new(3, 5) # initializes Grid with width=3, height=5
+    # end of scope, local variable 'grid' exits, no references to the Grid object. It inherits Reference, therefore it is freed.
+```
 
 ---
 
