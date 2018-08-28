@@ -505,6 +505,6 @@ position.distance_to(Player.position)
 
 
 ## < Written by [Emilio Coppola](https://github.com/coppolaemilio) > 
-
+### [Additional contributors](https://github.com/coppolaemilio/gamemaker-godot-dictionary/graphs/contributors)
 Special thanks to a lot of poor souls that helped me answering questions on Discord, Reddit and Twitter.
 
