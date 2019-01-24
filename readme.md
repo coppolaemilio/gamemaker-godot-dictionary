@@ -294,6 +294,22 @@ self.set_visibility(false);
 
 # Instance functions
 
+## Instance create
+
+GML
+```gml
+instance_create(x, y, obj);
+```
+
+GDScript
+```gdscript
+var scene = load("scenefilename.tscn")
+var id = scene.instance()
+add_child(id)
+id.position = Vector2(x, y)
+```
+Don't forget you can always write an instance_create() function to save line space.
+
 ## Instance destroy
 
 GML
@@ -308,6 +324,32 @@ self.free() # for all Objects, deletes immediately
 ```
 
 Note that deleting a Node will also delete all of its attached children automatically.
+
+## With
+
+GML
+```gml
+with object {
+    y += 1;
+}
+```
+
+GDScript
+```gdscript
+#The nodes you wish to access must first all be placed into a group. Add nodes to groups either through code or IDE.
+#Nodes are automatically removed from groups when deleted, so this is the only extra step.
+func _ready():
+    add_to_group("groupname")
+```
+```gdscript
+var group_members = get_tree().get_nodes_in_group("groupname")
+for all_id in group_members:
+    all_id.position.y += 1
+```
+```gdscript
+#Alternatively, you can run a function that's inside all members of the group.
+get_tree().call_group("groupname","function",argument0,argument1,etc)
+```
 
 ---
 
@@ -458,6 +500,17 @@ room_goto(room_name)
 GDScript
 ```gdscript
 get_tree().change_scene("res://nameofthescene.tscn")
+```
+
+## Room restart
+GML
+```gml
+room_restart();
+```
+
+GDScript
+```gdscript
+get_tree().reload_current_scene()
 ```
 
 ---
