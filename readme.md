@@ -15,14 +15,15 @@ This document is for game maker devs like me that are moving their games or engi
 4. [Globals](#globals)
 5. [Drawing functions](#drawing-functions)
 6. [Instance functions](#instance-functions)
-7. [Strings](#strings)
-8. [Random functions](#random-functions)
-9. [Math functions](#math-functions)
-10. [Game functions](#game-functions)
-11. [Room functions](#room-functions)
-12. [Window functions](#window-functions)
-13. [Other functions](#other-functions)
-14. [Data Structures](#data-structures)
+7. [Direction functions](#direction-functions)
+8. [Strings](#strings)
+9. [Random functions](#random-functions)
+10. [Math functions](#math-functions)
+11. [Game functions](#game-functions)
+12. [Room functions](#room-functions)
+13. [Window functions](#window-functions)
+14. [Other functions](#other-functions)
+15. [Data Structures](#data-structures)
 
 ---
 # Framework
@@ -303,12 +304,11 @@ instance_create(x, y, obj);
 
 GDScript
 ```gdscript
-var scene = load("scenefilename.tscn")
+var scene = load("res://scenefilename.tscn")
 var id = scene.instance()
 add_child(id)
 id.position = Vector2(x, y)
 ```
-Don't forget you can always write an instance_create() function to save line space.
 
 ## Instance destroy
 
@@ -350,6 +350,45 @@ for all_id in group_members:
 #Alternatively, you can run a function that's inside all members of the group.
 get_tree().call_group("groupname","function",argument0,argument1,etc)
 ```
+
+---
+
+# Direction functions
+
+All rotation functions in Godot will rotate clockwise as the variable increases (GameMaker rotates counter-clockwise) and most functions take radians and output radians, not degrees. It's best to get used to these differences, though deg2rad() and rad2deg() can help out. If you want to adjust a radian by degrees you can simply do: +deg2rad(180)
+
+## Point Direction
+
+GML
+```gml
+degrees = point_direction(x1, y1, x2, y2)
+```
+
+GDScript
+```gdscript
+var radians = Vector2.angle_to_point(Vector2)
+```
+
+point_direction returns degrees, while angle_to_point returns radians. Another difference is the order the coordinates are taken, if a backwards angle is returned you may want to swap the Vector2s.
+
+## Length Direction
+
+GML
+```gml
+move_x = lengthdir_x(len, dir);
+move_y = lengthdir_y(len, dir);
+```
+lengthdir_x/y returns individual X or Y vector components, while the Godot equivalent will store both of those floats in a Vector2.
+
+GDScript
+```gdscript
+var move_xy = Vector2(1,0).rotated(radians_var) * length
+```
+```gdscript
+#Alternative:
+var move_xy = Vector2(cos(radians_var),sin(radians_var)) * length
+```
+In place of "radians_var" we can use our earlier angle_to_point output variable (which is in radians), or maybe write deg2rad() for something else.
 
 ---
 
