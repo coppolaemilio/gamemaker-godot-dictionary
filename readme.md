@@ -147,7 +147,7 @@ GDScript **destroy()**
 func destroy():
     # Here you write whatever you want to 
     # run before removing the node
-    self.queue_free()
+    queue_free()
 ```
 
 ---
@@ -278,17 +278,17 @@ draw_string(font,Vector2(x,y),string,color,separation)
 GML
 ```gml
 visible = true;
-visible = false; 
+visible = false;
 ```
 
 GDScript
 ```gdscript
-self.show()
-self.hide()
-self.visible = true;
-self.visible = false;
-self.set_visibility(true);
-self.set_visibility(false);
+show()
+hide()
+visible = true
+visible = false
+set_visibility(true)
+set_visibility(false)
 ```
 
 ---
@@ -319,8 +319,8 @@ instance_destroy();
 
 GDScript
 ```gdscript
-self.queue_free() # for Nodes, waits until next frame to delete all queued Nodes at once
-self.free() # for all Objects, deletes immediately
+queue_free() # for Nodes, waits until next frame to delete all queued Nodes at once
+free() # for all Objects, deletes immediately
 ```
 
 Note that deleting a Node will also delete all of its attached children automatically.
