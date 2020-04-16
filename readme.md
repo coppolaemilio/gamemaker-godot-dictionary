@@ -115,7 +115,7 @@ func _process(delta):
 
 ## Draw Event
 
-Simple **Step Event** function for moving an object.
+Simple **Draw Event** function for drawing a rectangle.
 
 GML **Draw Event**
 ```gml
