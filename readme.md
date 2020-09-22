@@ -1,6 +1,9 @@
 
 # Game Maker to Godot dictionary
+![Cover](https://coppolaemilio.com/images/thumbnail/game-maker-to-godot.png)
+
 This document is for game maker devs like me that are moving their games or engine from GM:S to Godot. The first section gives a brief overview of the framework differences. The rest gives an API comparison for specific GML functions and their GDScript equivalent. You can use your browser's search functionality to find particular GML functions.
+
 
 ---
 
