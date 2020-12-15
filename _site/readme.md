@@ -240,7 +240,7 @@ draw_rect(Rect2, Color, bool filled=true)
 >
 > GDScript
 > ```gdscript
-> draw_rect(Rect2(Vector2(100, 120), Vector2(32, 32)), ColorN("red"), true)
+> draw_rect(Rect2(Vector2(100, 120), Vector2(32, 32)), Color("red"), true)
 > ```
 
 ## Drawing text
