@@ -5,6 +5,11 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <link rel="stylesheet" type="text/css" href="./style.css">
+  <link rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.4.1/styles/default.min.css">
+    <!-- and it's easy to individually load additional languages -->
+    <!-- <script charset="UTF-8"
+      src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.4.1/languages/go.min.js"></script> -->
   <title>GML 2 GDS</title>
 </head>
 <body>
@@ -249,7 +254,7 @@ draw_rectangle(100, 120, 132, 152, false);
 </code></pre>
 
   <p>GDScript</p>
-  <pre><code class="language-gdscript">draw_rect(Rect2(Vector2(100, 120), Vector2(32, 32)), ColorN("red"), true)
+  <pre><code class="language-gdscript">draw_rect(Rect2(Vector2(100, 120), Vector2(32, 32)), Color("red"), true)
 </code></pre>
 </blockquote>
 
@@ -732,6 +737,11 @@ func _ready():
 
 <h3 id="written-by-emilio-coppola-and-additional-contributors">Written by <a href="https://github.com/coppolaemilio">Emilio Coppola</a> and <a href="https://github.com/coppolaemilio/gamemaker-godot-dictionary/graphs/contributors">Additional contributors</a></h3>
 <p>Special thanks to a lot of poor souls that helped me answering questions on Discord, Reddit and Twitter.</p>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.4.1/highlight.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.4.1/languages/gml.min.js"></script>
+<script src="./gdscript.min.js"></script>
+<script>hljs.initHighlightingOnLoad();</script>
 
 </body>
 </html>
