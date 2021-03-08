@@ -16,17 +16,20 @@ This document is for game maker devs like me that are moving their games or engi
 2. [Events](#events)
 3. [Scripts](#scripts)
 4. [Globals](#globals)
-5. [Drawing functions](#drawing-functions)
+5. [Grouping objects](#grouping-objects)
 6. [Instance functions](#instance-functions)
-7. [Direction functions](#direction-functions)
-8. [Strings](#strings)
-9. [Random functions](#random-functions)
-10. [Math functions](#math-functions)
-11. [Game functions](#game-functions)
-12. [Room functions](#room-functions)
-13. [Window functions](#window-functions)
-14. [Other functions](#other-functions)
-15. [Data Structures](#data-structures)
+7. [Drawing functions](#drawing-functions)
+8. [Image variables](#image-variables)
+9. [Direction functions](#direction-functions)
+10. [Strings](#strings)
+11. [Random functions](#random-functions)
+12. [Math functions](#math-functions)
+13. [Game functions](#game-functions)
+14. [Room functions](#room-functions)
+15. [Window functions](#window-functions)
+16. [Other functions](#other-functions)
+17. [Data Structures](#data-structures)
+18. [Collision functions](#collision-functions)
 
 ---
 # Framework
@@ -199,6 +202,98 @@ Now, whenever you run any of your scenes, the script is always loaded. The varia
 
 The cool thing about godot is that you can also declare functions inside the `global.gd` file that you can use from any other instance inside your game.
 
+
+---
+
+# Grouping objects
+
+In Game Maker objects are automatically grouped by object_index. This process is not automatic for Godot, so you will need to manually add your nodes to a group to be able to refer to them and perform group actions on them as conveniently as you would in Game Maker. You can add nodes to groups either through code or the editor IDE. Generally you will only want to add your scene's root-node to the group, not all the attached Sprites and CollisionShapes. When the node is deleted it is automatically removed from groups.
+
+> ### Example:
+> Create a new scene in the editor called Tree.tscn, then attach a script to the scene's root-node with the following code:
+> ```gdscript
+> func _ready():
+>     add_to_group("Tree")
+> ```
+> Now every Tree scene you place will be a part of that grouping, which has a variety of uses.
+
+## object_index
+GML
+```gml
+if object_index = obj_monster {
+    // Object is obj_monster
+}
+```
+GDScript
+```gdscript
+if is_in_group("obj_monster"):
+    # Node is obj_monster
+```
+
+## With
+
+GML
+```gml
+with object {
+    y += 1;
+}
+```
+
+GDScript
+```gdscript
+for i in get_tree().get_nodes_in_group("groupname"):
+    i.position.y += 1
+```
+Alternatively, you can run a function that's inside all members of the group:
+```gdscript
+get_tree().call_group("groupname","function",argument0,argument1,etc)
+```
+
+---
+
+# Instance functions
+
+## Instance number
+GML
+```gml
+instance_number(obj);
+```
+
+GDScript
+```gdscript
+get_tree().get_nodes_in_group("obj").size()
+```
+
+## Instance create
+
+GML
+```gml
+instance_create(x, y, obj);
+```
+
+GDScript
+```gdscript
+var scene = load("res://scenefilename.tscn")
+var id = scene.instance()
+add_child(id)
+id.position = Vector2(x, y)
+```
+
+## Instance destroy
+
+GML
+```gml
+instance_destroy();
+```
+
+GDScript
+```gdscript
+queue_free() # for Nodes, waits until next frame to delete all queued Nodes at once
+free() # for all Objects, deletes immediately
+```
+
+Note that deleting a Node will also delete all of its attached children automatically.
+
 ---
 
 # Drawing functions
@@ -277,6 +372,34 @@ draw_string(font,Vector2(x,y),string,color,separation)
 > 	draw_string(Bitter,Vector2(140,100),"Hello world", Color(0,0,0,1),-1)
 > ```
 
+---
+
+# Image variables
+
+## image_blend
+GML
+```gml
+image_blend = c_red;
+```
+
+GDScript
+```gdscript
+modulate = Color.red
+```
+
+## image_angle
+Godot rotates clockwise while Game Maker rotates counter-clockwise.
+
+GML
+```gml
+image_angle = 90;
+```
+
+GDScript
+```gdscript
+rotation_degrees = -90
+```
+
 ## Visibility
 GML
 ```gml
@@ -296,69 +419,9 @@ set_visibility(false)
 
 ---
 
-# Instance functions
-
-## Instance create
-
-GML
-```gml
-instance_create(x, y, obj);
-```
-
-GDScript
-```gdscript
-var scene = load("res://scenefilename.tscn")
-var id = scene.instance()
-add_child(id)
-id.position = Vector2(x, y)
-```
-
-## Instance destroy
-
-GML
-```gml
-instance_destroy();
-```
-
-GDScript
-```gdscript
-queue_free() # for Nodes, waits until next frame to delete all queued Nodes at once
-free() # for all Objects, deletes immediately
-```
-
-Note that deleting a Node will also delete all of its attached children automatically.
-
-## With
-
-GML
-```gml
-with object {
-    y += 1;
-}
-```
-
-GDScript
-```gdscript
-#The nodes you wish to access must first all be placed into a group. Add nodes to groups either through code or IDE.
-#Nodes are automatically removed from groups when deleted, so this is the only extra step.
-func _ready():
-    add_to_group("groupname")
-```
-```gdscript
-var group_members = get_tree().get_nodes_in_group("groupname")
-for all_id in group_members:
-    all_id.position.y += 1
-```
-```gdscript
-#Alternatively, you can run a function that's inside all members of the group.
-get_tree().call_group("groupname","function",argument0,argument1,etc)
-```
-
----
-
 # Direction functions
 
-All rotation functions in Godot will rotate clockwise as the variable increases (GameMaker rotates counter-clockwise) and most functions take radians and output radians, not degrees. It's best to get used to these differences, though deg2rad() and rad2deg() can help out. If you want to adjust a radian by degrees you can simply do: +deg2rad(180)
+All rotation functions in Godot will rotate clockwise as the variable increases (GameMaker rotates counter-clockwise) and most functions take radians and output radians, not degrees. It's best to get used to these differences, though ``deg2rad()`` and ``rad2deg()`` can help out. If you want to adjust a radian by degrees you can simply do: ``+deg2rad(180)``.
 
 ## Point Direction
 
@@ -372,7 +435,7 @@ GDScript
 var radians = Vector2.angle_to_point(Vector2)
 ```
 
-point_direction returns degrees, while angle_to_point returns radians. Another difference is the order the coordinates are taken, if a backwards angle is returned you may want to swap the Vector2s.
+``point_direction`` returns degrees, while ``angle_to_point`` returns radians. Another difference is the order the coordinates are taken, if a backwards angle is returned you may want to swap the Vector2s.
 
 ## Length Direction
 
@@ -381,17 +444,17 @@ GML
 move_x = lengthdir_x(len, dir);
 move_y = lengthdir_y(len, dir);
 ```
-lengthdir_x/y returns individual X or Y vector components, while the Godot equivalent will store both of those floats in a Vector2.
+``lengthdir_x/y`` returns individual X or Y vector components, while the Godot equivalent will store both of those floats in a Vector2.
 
 GDScript
 ```gdscript
 var move_xy = Vector2(1,0).rotated(radians_var) * length
 ```
+Alternative:
 ```gdscript
-#Alternative:
 var move_xy = Vector2(cos(radians_var),sin(radians_var)) * length
 ```
-In place of "radians_var" we can use our earlier angle_to_point output variable (which is in radians), or maybe write deg2rad() for something else.
+In place of ``radians_var`` we can use our earlier ``angle_to_point`` output variable (which is in radians), or maybe write ``deg2rad()`` for something else.
 
 ---
 
@@ -846,6 +909,105 @@ const Grid = preload("res://grid.gd")
 func _ready():
     var grid = Grid.new(3, 5) # initializes Grid with width=3, height=5
     # end of scope, local variable 'grid' exits, no references to the Grid object. It inherits Reference, therefore it is freed.
+```
+
+---
+
+# Collision functions
+
+Note that there are many ways to detect collisions in Godot such as: ``is_on_floor()``, ``is_on_wall()``, ``is_on_ceiling()``, ``move_and_slide()``, RayCast2D and signals. In many cases those may be preferable to the methods shown below.
+
+## Instance Position
+As a reminder, in GM this function checks a single point position and then returns the instance ID of the colliding object.
+
+GML
+```gml
+instance_id = instance_position(x, y, obj);
+```
+
+GDScript
+
+Feed this function a local position Vector2 and group name string like so: ``instance_position(position + Vector2(32,16), "obj")``
+
+Set ``room_node`` to the node you want the coordinates of this check to be relative to, which is typically the "level" node that you're spawning all your scenes under. (The reason we use ``room_node.global_position`` is if we have any parents or grand-parents that have offset positions then the checked position won't be correct.)
+```gdscript
+onready var room_node = $'..'
+
+func instance_position(pos, group):
+    var space = get_world_2d().direct_space_state
+    for i in space.intersect_point(room_node.global_position + pos, 32, [], 0x7FFFFFFF, true, true):
+        if i["collider"].is_in_group(group):
+            return i["collider"]
+    return null
+```
+
+## Position Meeting
+In GM this function checks a single point position and then returns true or false depending on whether there was a collision.
+
+GML
+```gml
+boolean = position_meeting(x, y, obj);
+```
+
+GDScript
+
+Same code as Instance Position but replace the last two lines with ``return true`` and ``return false``.
+
+## Place Meeting
+In GM this function uses the collision mask of the instance that runs the code to check a position for a collision, then returns true or false depending on whether there was a collision.
+
+GML
+```gml
+boolean = place_meeting(x+32, y+16, obj);
+```
+
+GDScript
+
+``test_move`` works a little differently than ``place_meeting``, it involves the X and Y position of the current node by default and will return true if it finds anything along the entire vector, while GM's function will check one specific position only. (This function is exclusive to KinematicBody and KinematicBody2D.)
+```gdscript
+var boolean = test_move(global_transform, Vector2(32, 16))
+```
+
+The line below will check only one specific position like GM's function, without checking along the entire vector:
+```gdscript
+var boolean = test_move(global_transform.translated(Vector2(32, 16)), Vector2(0,0))
+```
+
+The line below will check only one specific position like GM's and without involving the current node's X and Y position. This is equivalent to ``place_meeting(100, 200, obj)``. Set ``room_node`` to the node you want the coordinates of this check to be relative to:
+```gdscript
+var boolean = test_move(room_node.global_transform.translated(Vector2(100, 200)), Vector2(0,0))
+```
+
+## Instance Place
+In GM this function uses the collision mask of the instance that runs the code to check a position for a collision, then returns the instance ID of the colliding object.
+
+GML
+```gml
+instance_id = instance_place(x+32, y+16, obj);
+```
+
+GDScript
+
+If we set ``move_and_collide``'s last argument ``test_only`` to true, then it will behave exactly like ``test_move`` except it will return collision data and not just a boolean:
+```gdscript
+var collision_data = move_and_collide(Vector2(32,16), true, true, true)
+var id = collision_data.collider
+```
+
+If we want to avoid checking along the entire Vector and check only one specific position like GM's functions, then we'll need to use ``intersect_shape``. Set ``room_node`` to the node you want the coordinates of this check to be relative to. Set ``shape`` to whatever CollisionShape2D node you want to use:
+```gdscript
+onready var room_node = $'..'
+
+func instance_place(pos, group):
+    var space = get_world_2d().direct_space_state
+    var shape = $"CollisionShape2D".shape
+    var query = Physics2DShapeQueryParameters.new()
+    query.shape_rid = shape
+    query.transform = room_node.global_transform.translated(pos)
+    for i in space.intersect_shape(query):
+        if i["collider"].is_in_group(group):
+            return i["collider"]
+    return null
 ```
 
 ---
