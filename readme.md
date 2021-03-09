@@ -935,7 +935,7 @@ onready var room_node = $'..'
 
 func instance_position(pos, group):
     var space = get_world_2d().direct_space_state
-    for i in space.intersect_point(room_node.global_position + pos, 32, [], 0x7FFFFFFF, true, true):
+    for i in space.intersect_point(room_node.global_transform.translated(pos).get_origin(), 32, [], 0x7FFFFFFF, true, true):
         if i["collider"].is_in_group(group):
             return i["collider"]
     return null
@@ -997,13 +997,13 @@ var id = collision_data.collider
 If we want to avoid checking along the entire Vector and check only one specific position like GM's functions, then we'll need to use ``intersect_shape``. Set ``room_node`` to the node you want the coordinates of this check to be relative to. Set ``shape`` to whatever CollisionShape2D node you want to use:
 ```gdscript
 onready var room_node = $'..'
+onready var colshape_node = shape_owner_get_owner(0) # Returns the first child node which contains a collision shape
 
 func instance_place(pos, group):
     var space = get_world_2d().direct_space_state
-    var shape = $"CollisionShape2D".shape
     var query = Physics2DShapeQueryParameters.new()
-    query.shape_rid = shape
-    query.transform = room_node.global_transform.translated(pos)
+    query.shape_rid = colshape_node.shape
+    query.transform = room_node.global_transform.translated(pos) * colshape_node.transform
     for i in space.intersect_shape(query):
         if i["collider"].is_in_group(group):
             return i["collider"]
