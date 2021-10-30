@@ -299,6 +299,12 @@ Note that deleting a Node will also delete all of its attached children automati
 # Drawing functions
 On game maker you can only use the drawing functions inside the draw event of an instance. On Godot you have to call the drawing functions inside a `func _draw()` of a [**CanvasItem**](http://docs.godotengine.org/en/3.0/classes/class_canvasitem.html).
 
+Generally in Godot, you don't really need to call draws all the time since you can use pre-built scenes with everything for your UI. Thigs like text, panels, buttons and so on are already built-in and ready for you to use without any need to code the entire logic from scratch like you would have to do in Game Maker. Please search for any "Control Nodes" tutorials online and you will find how good this part of Godot is.
+
+This guide will get you started with UI design: [Design interfaces with the Control nodes](https://docs.godotengine.org/en/stable/getting_started/step_by_step/ui_introduction_to_the_ui_system.html)
+
+If you still want to torture yourself with individual draw calls, here you have some references:
+
 ## Making colors
 GML
 ```gml
